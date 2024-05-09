@@ -1,0 +1,121 @@
+#include<iostream>
+using namespace std;
+
+struct node{
+    int data;
+    node *lc;
+    node *rc;
+
+}*root;
+
+
+class BST
+{
+    public:
+    BST(){
+        root=NULL;
+
+    }
+    void create();
+    void rec_preorder(node *t);
+    void display();
+    void newone();
+    void search();
+
+};
+
+void BST:: create(){
+    int ans;
+    node *curr;
+    node *temp;
+    do{
+        node *temp=new node;
+        cout<<"Enter the data : ";
+        cin>>temp->data;
+        temp->lc=NULL;
+        temp->rc=NULL;
+    
+        if(root==NULL){
+            root=temp;
+        }
+        else{
+            curr=root;
+            while(1){
+            if(temp->data<curr->data){
+                if(curr->lc==NULL){
+                curr->lc=temp;
+                break;
+                }
+
+            
+            else{
+                curr=curr->lc;
+            }
+            }
+            if(temp->data>curr->data){
+                if(curr->rc==NULL){
+                curr->rc=temp;
+                break;
+                }
+
+            
+            else{
+                curr=curr->rc;
+            }
+
+        }
+        }
+        }
+        cout<<"Do you want to add another node ? (0/1)";
+        cin>>ans;
+
+    }while(ans==1);
+}
+
+
+void BST::display(){
+    cout<<"The Preorder Traversal : ";
+    rec_preorder(root);
+    
+}
+
+void BST::rec_preorder(node *t){
+    if(t!=NULL){
+        cout<<t->data <<"\t";
+        rec_preorder(t->lc);
+        rec_preorder(t->rc);
+    }
+}
+
+void BST::search(){
+   node *t=root;
+
+   int key;
+   cout<<"\n";
+   cout<<"Enter key to be searched : ";
+   cin>>key;
+   while(t!=NULL){
+    if(t->data==key){
+        cout<<"Key is found ";
+        break;
+    }
+    if(t->data>key){
+        t=t->lc;
+    }
+    if(t->data<key){
+        t=t->rc;
+    }
+   }
+
+   if(t==NULL){
+    cout<<"Key not found ";
+   }
+
+}
+int main(){
+    BST obj;
+    obj.create();
+    obj.display();
+    obj.search();
+    return 0;
+}
