@@ -1,113 +1,200 @@
 #include<iostream>
 using namespace std;
 
-struct node{
-    int data;
-    node *lc;
-    node *rc;
-    int lf;
-    int rf;
-}*root,*header;
-
-class BTT
+class BTT 
 {
+    private:
+    struct node 
+    {
+        int data;
+        node *lc;
+        node *rc;
+        int lf;
+        int rf;
+    } *root, *header;
+
     public:
-    BTT(){
-        root=NULL;
-        header=NULL;
+    BTT() 
+    {
+        root = NULL;
+        header = NULL;
     }
+
     void create();
     void preorder();
+    void search(int key); 
 };
 
-void BTT::create(){
+
+void BTT::create() 
+{
     int ans;
-    node *curr;
-    node *temp;
-    header=new node;
-    header->lc=header;
-    header->rc=header;
+    node *temp, *curr;
 
-    do{
-        temp=new node;
-        cout<<"Enter the data : ";
-        cin>>temp->data;
-        temp->lf=0;
-        temp->rf=0;
+    header = new node;
+    header->lc = header;
+    header->rc = header;
 
-        if(root==NULL){
-            root=temp;
-            root->lc=header;
-            root->rc=header;
-        }
-        else{
-            curr=root;
-            while(1){
-            if(temp->data<curr->data){
-                if(curr->lf==0){
-                    temp->lc=curr->lc;
-                    temp->rc=curr;
-                    curr->lc=temp;
-                    curr->lf=1;
-                    break;
+    do 
+    {
+        temp = new node;
+        cout << "Enter data: ";
+        cin >> temp->data;
+        temp->lf = 0;
+        temp->rf = 0;
+
+        if (root == NULL) 
+        {
+            root = temp;
+            root->lc = header;
+            root->rc = header;
+        } 
+        else 
+        {
+            curr = root;
+
+            while (true) 
+            {
+                if (temp->data < curr->data) 
+                {
+                    if (curr->lf == 0) 
+                    {
+                        temp->lc = curr->lc;
+                        temp->rc = curr;
+                        curr->lc = temp;
+                        curr->lf = 1;
+                        break;
+                    } 
+                    else
+                        curr = curr->lc;
                 }
-                else{
-                    curr=curr->lc;
-                }
 
+                if (temp->data > curr->data) 
+                {
+                    if (curr->rf == 0) 
+                    {
+                        temp->rc = curr->rc;
+                        temp->lc = curr;
+                        curr->rc = temp;
+                        curr->rf = 1;
+                        break;
+                    } 
+                    else
+                        curr = curr->rc;
+                }
             }
-            if(temp->data>curr->data){
-                if(curr->rf==0){
-                    temp->rc=curr->rc;
-                    temp->lc=curr;
-                    curr->rc=temp;
-                    curr->rf=1;
-                    break;
-                }
-                else{
-                    curr=curr->rc;
-                }
-            }
-
         }
-        }
-        cout<<"Do you want to add another node ? ";
-        cin>>ans;
 
-    }while(ans==1);
+        cout << "Do you want to insert? (1/0): ";
+        cin >> ans;
+    } while (ans == 1);
 }
 
-void BTT::preorder(){
-    node *t=new node;
-    
-    if(root==NULL){
-        cout<<"BTT is empty ";
-    }
-    else{ 
-        t=root;
+void BTT::preorder() 
+{
+    if (root == NULL) 
+    {
+        cout << "\nBTT is empty";
+        return;
+    } 
+    else 
+    {
+        node *t = root;
 
-        while(t!=header){
-            cout<<t->data<<"\t";
-            if(t->lf==1){
-                t=t->lc;
-            }
-            else{
-                while(t->rf==0){
-                    t=t->rc;
-                    if(t==header){
-                    break;
-                    }
+        while (t != header) 
+        {
+            cout << t->data << "\t";
+            if (t->lf == 1)
+                t = t->lc;
+            else 
+            {
+                while (t->rf == 0) 
+                {
+                    t = t->rc;
+                    if (t == header)
+                        break;
                 }
+                t = t->rc;
+            }
+        }
+    }
+}
+
+void BTT::search(int key) 
+{
+    if (root == NULL) 
+    {
+        cout << "Binary Threaded Tree is empty." << endl;
+        return ;
+    }
+
+    node *t = root;
+    while (t != header) 
+    {
+        if (t->data == key)
+        {
+            cout<<"Found!"<<endl;
+            return;
+        }
+        else if (key< t->data)
+        {
+            if(t->lf==1)
+                t=t->lc;
+            else
+                break;
+        }
+        else
+        {
+            if(t->rf==1)
+            {
                 t=t->rc;
             }
+            else
+                break;
         }
     }
 
+    cout<<"Not found!"<<endl;
 }
 
-int main(){
-    BTT obj;
-    obj.create();
-    obj.preorder();
-    return 0;
+int main() 
+{
+    BTT btt;
+    int choice;
+    int key;
+
+    do 
+    {
+        cout << "\nMenu:\n";
+        cout << "1. Create binary threaded tree\n";
+        cout << "2. Preorder Traversal\n";
+        cout << "3. Search for a key\n";
+        cout << "4. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch(choice) 
+        {
+            case 1:
+                btt.create();
+                break;
+            case 2:
+                cout << "\nPreorder Traversal: ";
+                btt.preorder();
+                cout << endl;
+                break;
+            case 3:
+                cout<<"Enter key to search: ";
+                cin>>key;
+                btt.search(key);
+                break;
+            case 4:
+                cout << "Exiting program...\n";
+                break;
+            default:
+                cout << "Invalid choice. Please enter a valid option.\n";
+        }
+    } while(choice != 4);
+
+    return 0;
 }
