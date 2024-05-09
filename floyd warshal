@@ -1,10 +1,9 @@
 #include <iostream>
 using namespace std;
-#define V 4
 #define INF 99999
-void printSolution(int dist[][V]);
+void printSolution(int** dist, int V);
 
-void floydWarshall(int dist[][V])
+void floydWarshall(int** dist, int V)
 {
 
     int i, j, k;
@@ -27,11 +26,11 @@ void floydWarshall(int dist[][V])
     }
 
     // Print the shortest distance matrix
-    printSolution(dist);
+    printSolution(dist, V);
 }
 
 /* A utility function to print solution */
-void printSolution(int dist[][V])
+void printSolution(int** dist, int V)
 {
     cout << "The following matrix shows the shortest "
             "distances"
@@ -48,16 +47,39 @@ void printSolution(int dist[][V])
     }
 }
 
+int** create_graph(int v) {
+    int p;
+
+    // Dynamically allocate memory for the 2D array
+    int** arr = new int*[v];
+    for (int i = 0; i < v; i++) {
+        arr[i] = new int[v];
+    }
+
+    for (int i = 0; i < v; i++) {
+        for (int j = 0; j < v; j++) {
+             {
+                cout << "Enter path distance between " << i+1 << " and " << j+1 << " (type INF for infinity): ";
+                cin >> p;
+                arr[i][j] = p;
+            }
+        }
+    }
+    return arr;
+}
+ 
+
 // Driver's code
 int main()
 {
    
-    int graph[V][V] = { { 0, 5, INF, 10 },
-                        { INF, 0, 3, INF },
-                        { INF, INF, 0, 1 },
-                        { INF, INF, INF, 0 } };
+    int v;
+    cout<<"Enter no. of vertices: ";
+    cin>>v;
+    int** graph;
+    graph = create_graph(v);
 
     // Function call
-    floydWarshall(graph);
-    return 0;
+    floydWarshall(graph, v);
+return 0;
 }
