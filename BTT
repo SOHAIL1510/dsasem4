@@ -1,0 +1,113 @@
+#include<iostream>
+using namespace std;
+
+struct node{
+    int data;
+    node *lc;
+    node *rc;
+    int lf;
+    int rf;
+}*root,*header;
+
+class BTT
+{
+    public:
+    BTT(){
+        root=NULL;
+        header=NULL;
+    }
+    void create();
+    void preorder();
+};
+
+void BTT::create(){
+    int ans;
+    node *curr;
+    node *temp;
+    header=new node;
+    header->lc=header;
+    header->rc=header;
+
+    do{
+        temp=new node;
+        cout<<"Enter the data : ";
+        cin>>temp->data;
+        temp->lf=0;
+        temp->rf=0;
+
+        if(root==NULL){
+            root=temp;
+            root->lc=header;
+            root->rc=header;
+        }
+        else{
+            curr=root;
+            while(1){
+            if(temp->data<curr->data){
+                if(curr->lf==0){
+                    temp->lc=curr->lc;
+                    temp->rc=curr;
+                    curr->lc=temp;
+                    curr->lf=1;
+                    break;
+                }
+                else{
+                    curr=curr->lc;
+                }
+
+            }
+            if(temp->data>curr->data){
+                if(curr->rf==0){
+                    temp->rc=curr->rc;
+                    temp->lc=curr;
+                    curr->rc=temp;
+                    curr->rf=1;
+                    break;
+                }
+                else{
+                    curr=curr->rc;
+                }
+            }
+
+        }
+        }
+        cout<<"Do you want to add another node ? ";
+        cin>>ans;
+
+    }while(ans==1);
+}
+
+void BTT::preorder(){
+    node *t=new node;
+    
+    if(root==NULL){
+        cout<<"BTT is empty ";
+    }
+    else{ 
+        t=root;
+
+        while(t!=header){
+            cout<<t->data<<"\t";
+            if(t->lf==1){
+                t=t->lc;
+            }
+            else{
+                while(t->rf==0){
+                    t=t->rc;
+                    if(t==header){
+                    break;
+                    }
+                }
+                t=t->rc;
+            }
+        }
+    }
+
+}
+
+int main(){
+    BTT obj;
+    obj.create();
+    obj.preorder();
+    return 0;
+}
