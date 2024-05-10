@@ -1,101 +1,106 @@
-#include<iostream>
+#include <iostream>
 using namespace std;
 
-class adjmat{
-    
-    int w;
-    int n;
-    int adjgraph[10][10];
-    public:
-        adjmat()
-        {
-            cout<<"Enter the number of edges in the graph : ";
-            cin>>n;
-            for(int i=0;i<n;i++){
-                for(int j=0;j<n;j++){
-                    adjgraph[i][j]=0;
-            
-                }
-            }
-        }
-        void create();
-        void display();
-        void prim();
-
+class Tree {
+    int a[20][20], l, u, w, i, j, v, e, visited[20];
+public:
+    void input();
+    void display();
+    void minimum();
 };
 
-void adjmat::create(){
-    int ans;
-    int sv;
-    int ev;
-    do{
-    cout<<"Enter the starting vertex : ";
-    cin>>sv;
-    cout<<"Enter ending vertex : ";
-    cin>>ev;
-    cout<<"Enter weight between : ";
-    cin>>w;
-    adjgraph[sv][ev]=w;
-    adjgraph[ev][sv]=w;
-    cout<<"More edges ? ";
-    cin>>ans;
+void Tree::input() {
+    cout << "Enter the number of branches: ";
+    cin >> v;
 
-    }while (ans==1);
-}
-
-void adjmat::display(){
-    for(int i=0;i<n;i++){
-        cout<<"\n";
-        for(int j=0;j<n;j++){
-            cout<<adjgraph[i][j]<<"\t";
+    for(i = 0; i < v; i++) {
+        visited[i] = 0;
+        for(j = 0; j < v; j++) {
+            a[i][j] = 999;
         }
     }
+
+    cout << "\nEnter the number of connections: ";
+    cin >> e;
+
+    for(i = 0; i < e; i++) {
+        cout << "Enter the end branches of connections: " << endl;
+        cin >> l >> u;
+        cout << "Enter the phone company charges for this connection: ";
+        cin >> w;
+        a[l - 1][u - 1] = a[u - 1][l - 1] = w;
+    }
 }
 
-void adjmat::prim(){
-    int SV;
-    
-    int visited[n];
-    
-    for(int i=0;i<n;i++){
-        visited[i]=0;
-    }
+void Tree::display() {
+    cout << "\nAdjacency matrix:";
 
-    
-    int v1,v2;
-    int mincost=0;
-    cout<<"Enter starting vertex : ";
-    cin>>SV;
-    visited[SV]=1;
-    for(int k=1;k<(n-1);k++){
-        int min=999;
-        for(int i=0;i<n;i++){
-            if(visited[i]==1){
-                for(int j=0;j<n;j++){
-                    if(visited[j]==0){
-                        if((adjgraph[i][j]<min) && (adjgraph[i][j]!=0)){
-                            min=adjgraph[i][j];
-                            v1=i;
-                            v2=j;
-                        }                    
+    for(i = 0; i < v; i++) {
+        cout << endl;
+        for(j = 0; j < v; j++) {
+            cout << a[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+void Tree::minimum() {
+    int p = 0, q = 0, total = 0, min;
+
+    visited[0] = 1;
+
+    for(int count = 0; count < (v - 1); count++) {
+        min = 999;
+
+        for(i = 0; i < v; i++) {
+            if(visited[i] == 1) {
+                for(j = 0; j < v; j++) {
+                    if(visited[j] != 1) {
+                        if(min > a[i][j]) {
+                            min = a[i][j];
+                            p = i;
+                            q = j;
                         }
+                    }
                 }
             }
         }
-        visited[v2]=1;
-        mincost=mincost+adjgraph[v1][v2];
-        cout<<"\n"<<v1<<"->"<<v2<<endl;
+
+        visited[p] = 1;
+        visited[q] = 1;
+        total += min;
+
+        cout << "Minimum cost connection is " << (p + 1) << " -> " << (q + 1) << " with charge: " << min << endl;
     }
-    cout<<"\n Minimum cost is : "<<mincost;
 
-
-
+    cout << "The minimum total cost of connections of all branches is: " << total << endl;
 }
 
-int main(){
-    adjmat a;
-    a.create();
-    a.display();
-    a.prim();
+int main() {
+    int ch;
+    Tree t;
+
+    do {
+        cout << "==========PRIM'S ALGORITHM=================" << endl;
+        cout << "\n1. INPUT\n2. DISPLAY\n3. MINIMUM\n" << endl;
+        cout << "Enter your choice: " << endl;
+        cin >> ch;
+
+        switch(ch) {
+            case 1:
+                cout << "*INPUT YOUR VALUES*" << endl;
+                t.input();
+                break;
+            case 2:
+                cout << "*DISPLAY THE CONTENTS*" << endl;
+                t.display();
+                break;
+            case 3:
+                cout << "*MINIMUM*" << endl;
+                t.minimum();
+                break;
+        }
+    } while(ch != 4);
+
     return 0;
 }
